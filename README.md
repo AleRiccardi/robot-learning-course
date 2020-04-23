@@ -1,2 +1,2 @@
-# robot-learning-lecture
-A list of exercies for the Robot Learning lecture
+# robot-learning-course
+A list of exercies for the Robot Learning course
