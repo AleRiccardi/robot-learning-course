@@ -2,20 +2,40 @@
 import numpy as np
 
 
-
 def move_still_possible(S):
     return not (S[S==0].size == 0)
 
+def move(S, p):
+    if p == 1:
+        return move_by_selection(S)
+    else:
+        return move_at_random(S)
 
-def move_at_random(S, p):
+def move_at_random(S):
     xs, ys = np.where(S==0)
 
     i = np.random.permutation(np.arange(xs.size))[0]
     
-    S[xs[i],ys[i]] = p
+    S[xs[i],ys[i]] = -1
 
     return S
 
+def move_by_selection(S):
+    xs, ys = np.where(S==0)
+    valid = False
+    while(not valid):
+        print("Make a move: ", end="")
+        i = int(input()) - 1
+        x = i % 3
+        y = i // 3
+
+        if S[y, x] == 0:
+            S[y, x] = 1
+            valid = True
+        else:
+            print("Invalid move")
+    return S
+    
 
 def move_was_winning_move(S, p):
     if np.max((np.sum(S, axis=0)) * p) == 3:
@@ -67,7 +87,7 @@ if __name__ == '__main__':
         print ('%s moves' % name)
 
         # let current player move at random
-        gameState = move_at_random(gameState, player)
+        gameState = move(gameState, player)
 
         # print current game state
         print_game_state(gameState)
