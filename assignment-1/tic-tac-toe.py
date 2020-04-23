@@ -20,7 +20,7 @@ def move_x(S, vs, count):
     valid = False
     
     # first 10 games, play by selection
-    if count < 0:
+    if count < 10:
         while(not valid):
             print("Make a move: ", end="")
             i = int(input()) - 1
@@ -123,7 +123,7 @@ if __name__ == '__main__':
     countGame = 0
     wins = []
 
-    while(countGame < 5000):
+    while(countGame < 1010):
         # initialize an empty tic tac toe board
         gameState = np.zeros((3,3), dtype=int)
         # Last player before terminal state
@@ -163,11 +163,11 @@ if __name__ == '__main__':
             tracker.append(gameState)
 
             # print current game state
-            # print_game_state(gameState)
+            print_game_state(gameState)
             
             # evaluate current game state
             if move_was_winning_move(gameState, player):
-                # print ('player %s wins after %d moves' % (name, mvcntr))
+                print ('player %s wins after %d moves' % (name, mvcntr))
                 noWinnerYet = False
                 last_vs = 1 if player == 1 else 0
 
@@ -179,13 +179,13 @@ if __name__ == '__main__':
         updateVs(vs, tracker, lastMove, last_vs)
 
         # Update wins when GameAI plays
-        # if (countGame > 9):
-        wins.append(last_vs)
+        if (countGame > 9):
+            wins.append(last_vs)
 
         # Increase game counter
         countGame += 1
 
-    # if noWinnerYet:
-        # print ('game ended in a draw' )
+    if noWinnerYet:
+        print ('game ended in a draw' )
 
     showStatistics(wins, countGame)
