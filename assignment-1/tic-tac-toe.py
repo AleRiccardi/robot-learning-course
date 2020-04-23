@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def move_still_possible(S):
@@ -19,7 +20,7 @@ def move_x(S, vs, count):
     valid = False
     
     # first 10 games, play by selection
-    if count < 1:
+    if count < 0:
         while(not valid):
             print("Make a move: ", end="")
             i = int(input()) - 1
@@ -102,8 +103,15 @@ def updateVs(vs, tracker, lastMove, last_vs):
         vs[np.array_str(tracker[x])] = (vs[np.array_str(tracker[x])] + 0.2 * (vs[np.array_str(tracker[x+1])] - vs[np.array_str(tracker[x])]))
 
 
-def showStatistics(wons, count):
-    wons_np = np.array(wons)
+def showStatistics(wins, count):
+    freq = []
+    for x in range(0, len(wins), 100):
+        freq.append(wins[x-100:x].count(1) / 100)
+
+    plt.plot(freq)
+    plt.ylabel('Win frequency')
+    plt.show()
+
 
 if __name__ == '__main__':
     # First game state initialization
@@ -113,9 +121,9 @@ if __name__ == '__main__':
     
     # Game variable
     countGame = 0
-    wons = []
+    wins = []
 
-    while(countGame < 1010):
+    while(countGame < 5000):
         # initialize an empty tic tac toe board
         gameState = np.zeros((3,3), dtype=int)
         # Last player before terminal state
@@ -155,11 +163,11 @@ if __name__ == '__main__':
             tracker.append(gameState)
 
             # print current game state
-            print_game_state(gameState)
+            # print_game_state(gameState)
             
             # evaluate current game state
             if move_was_winning_move(gameState, player):
-                print ('player %s wins after %d moves' % (name, mvcntr))
+                # print ('player %s wins after %d moves' % (name, mvcntr))
                 noWinnerYet = False
                 last_vs = 1 if player == 1 else 0
 
@@ -167,11 +175,17 @@ if __name__ == '__main__':
             player *= -1
             mvcntr +=  1
 
-        showStatistics(wons, countGame)
-        countGame += 1
-        
-    # Update Vs
-    updateVs(vs, tracker, lastMove, last_vs)
+        # Update Vs
+        updateVs(vs, tracker, lastMove, last_vs)
 
-    if noWinnerYet:
-        print ('game ended in a draw' )
+        # Update wins when GameAI plays
+        # if (countGame > 9):
+        wins.append(last_vs)
+
+        # Increase game counter
+        countGame += 1
+
+    # if noWinnerYet:
+        # print ('game ended in a draw' )
+
+    showStatistics(wins, countGame)
